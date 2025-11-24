@@ -1,14 +1,7 @@
 
 package frc.robot.subsystems;
 
-//import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-//import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -37,39 +30,17 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightDriveEncoderReversed,
             DriveConstants.kBackRightTurningEncoderReversed);
 
-    SwerveModulePosition[] modulePositions = {
-        frontLeft.getPosition(),
-        frontRight.getPosition(),
-        backLeft.getPosition(),
-        backRight.getPosition(),
-    };
-
-    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, new Rotation2d(0), 
-    modulePositions);
+    // Additional code for odometry, periodic updates, etc., can be added here
 
     public SwerveSubsystem() {
         new Thread(() -> {
 
         }).start();
     }
-    
-    //public Rotation2d getRotation2d() {
-    //    return Rotation2d.fromDegrees(getHeading());
-    //}
-
-    public Pose2d getPose() {
-        return odometer.getPoseMeters();
-    }
-
-    //public void resetOdometry(Pose2d pose) {
-   //     odometer.resetPosition(gyro.getAngle(), modulePositions, pose);
-    //}
 
     @Override
     public void periodic() {
-        //odometer.update(getRotation2d(), modulePositions);
-        //SmartDashboard.putNumber("Robot Heading", getHeading());
-        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+        
     }
 
     public void stopModules() {
@@ -80,7 +51,6 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        //SwerveDriveKinematics.normalizeWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         frontLeft.setDesiredState(desiredStates[0]);
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
