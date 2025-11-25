@@ -29,6 +29,7 @@ public class SwerveModule {
     private final RelativeEncoder turningEncoder;
 
     private final PIDController turningPidController;
+    //private final PIDController drivePidController;
 
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed) {
 
@@ -47,13 +48,16 @@ public class SwerveModule {
         turnConfig.encoder.velocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
         driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        turningMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        turningMotor.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         driveEncoder = driveMotor.getEncoder();
         turningEncoder = turningMotor.getEncoder();
 
         turningPidController = new PIDController(ModuleConstants.kPTurning, 0, 0);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
+
+        //drivePidController = new PIDController(ModuleConstants.kPDrive, 0, 0);
+        //drivePidController.enableContinuousInput(-Math.PI, Math.PI);
 
         resetEncoders();
     }
@@ -80,6 +84,7 @@ public class SwerveModule {
 
     public void resetEncoders() {
         driveEncoder.setPosition(0);
+        turningEncoder.setPosition(0);
     }
 
     public SwerveModuleState getState() {
@@ -93,6 +98,7 @@ public class SwerveModule {
         }
         driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
+        //driveMotor.set(drivePidController.calculate(getDriveVelocity(), state.angle.getRadians()));
     }
 
     public void stop() {
