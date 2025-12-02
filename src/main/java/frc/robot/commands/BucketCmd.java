@@ -28,13 +28,10 @@ public class BucketCmd extends Command {
     @Override
     public void execute() {
         if (leftBumper.get()) {
-            bucketSubsystem.setMotorAngle(0);
+            bucketSubsystem.stop();
         }
         else if (rightBumper.get()) {
             bucketSubsystem.setMotorAngle(ModuleConstants.kBucketEngagedAngle);
-        }
-        else {
-            bucketSubsystem.stop();
         }
     }
 

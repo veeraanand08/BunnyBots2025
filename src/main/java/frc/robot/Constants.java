@@ -20,8 +20,8 @@ public final class Constants {
 
         public static final double kBucketMotorGearRatio = 1 / 3.0;
         public static final double kBucketEncoderRot2Rad = 2 * Math.PI * kBucketMotorGearRatio;
-        public static final double kPLeftBucket = 0.004;
-        public static final double kPRightBucket = 0.004;
+        public static final double kPLeftBucket = 0.04;
+        public static final double kPRightBucket = 0.04;
         public static final double kILeftBucket = 0.0;
         public static final double kIRightBucket = 0.0;
         public static final double kDLeftBucket = 0.0;
@@ -49,7 +49,7 @@ public final class Constants {
         public static final int kFrontLeftDriveMotorPort = 5;
         
         public static final int kFrontRightTurningMotorPort = 9;
-        public static final int kFrontRightDriveMotorPort = 8;
+        public static final int kFrontRightDriveMotorPort = 11;
         
         public static final int kBackRightTurningMotorPort = 13;
         public static final int kBackRightDriveMotorPort = 12;
