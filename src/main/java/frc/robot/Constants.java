@@ -17,6 +17,17 @@ public final class Constants {
         public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
         public static final double kPTurning = 0.5;
         public static final double kPDrive = 0.5;
+
+        public static final double kBucketMotorGearRatio = 1 / 3.0;
+        public static final double kBucketEncoderRot2Rad = 2 * Math.PI * kBucketMotorGearRatio;
+        public static final double kPLeftBucket = 0.004;
+        public static final double kPRightBucket = 0.004;
+        public static final double kILeftBucket = 0.0;
+        public static final double kIRightBucket = 0.0;
+        public static final double kDLeftBucket = 0.0;
+        public static final double kDRightBucket = 0.0;
+
+        public static final double kBucketEngagedAngle = 720.0; // degrees
     }
 
     public static final class DriveConstants {
@@ -43,8 +54,11 @@ public final class Constants {
         public static final int kBackRightTurningMotorPort = 13;
         public static final int kBackRightDriveMotorPort = 12;
 
-        private static final int kLeftBucketMotor = 6;
-        private static final int kRightBucketMotor = 11;
+        public static final int kLeftBucketMotor = 6;
+        public static final int kRightBucketMotor = 8;
+
+        public static final boolean kLeftBucketMotorReversed = false;
+        public static final boolean kRightBucketMotorReversed = true;
         
         public static final int kBackLeftDriveAbsoluteEncoderPort = 1;
         public static final int kFrontLeftDriveAbsoluteEncoderPort = 3;
