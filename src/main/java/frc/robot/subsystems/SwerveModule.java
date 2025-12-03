@@ -96,6 +96,8 @@ public class SwerveModule {
             stop();
             return;
         }
+        state.optimize(new Rotation2d(getTurningPosition()));
+
         driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
         //driveMotor.set(drivePidController.calculate(getDriveVelocity(), state.angle.getRadians()));
