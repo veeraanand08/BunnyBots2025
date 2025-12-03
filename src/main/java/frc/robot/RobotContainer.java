@@ -2,7 +2,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.BucketCmd;
 import frc.robot.commands.SwerveJoystickCmd;
@@ -17,12 +16,12 @@ public class RobotContainer {
     private final XboxController controller = new XboxController(OIConstants.kDriverControllerPort);
 
     public RobotContainer() {
-        // HASAN FIX THIS
-        // swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
-        //         swerveSubsystem,
-        //         () -> -driverJoystick.getRawAxis(OIConstants.kDriverXAxis),
-        //         () -> driverJoystick.getRawAxis(OIConstants.kDriverYAxis),
-        //         () -> driverJoystick.getRawAxis(OIConstants.kDriverRotAxis)));
+        swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
+                swerveSubsystem,
+                controller::getLeftX,
+                controller::getLeftY,
+                controller::getRightX
+        ));
         
         bucketSubsystem.setDefaultCommand(new BucketCmd(
                 bucketSubsystem,
