@@ -1,71 +1,68 @@
-// package frc.robot.commands;
+package frc.robot.commands;
 
-// import java.util.function.Supplier;
-// import edu.wpi.first.math.filter.SlewRateLimiter;
-// import edu.wpi.first.math.kinematics.ChassisSpeeds;
-// import edu.wpi.first.math.kinematics.SwerveModuleState;
-// import edu.wpi.first.wpilibj2.command.Command;
-// import frc.robot.Constants.DriveConstants;
-// import frc.robot.Constants.OIConstants;
-// import frc.robot.subsystems.BucketSubsystem;
+import java.util.function.Supplier;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ModuleConstants;
+import frc.robot.subsystems.BucketSubsystem;
 
-// public class BucketCmd extends Command {
+public class BucketCmd extends Command {
 
-//     private final BucketSubsystem bucketSubsystem;
-//     private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
-//     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+    private final BucketSubsystem bucketSubsystem;
+    private final Supplier<Boolean> leftBumper, rightBumper;
 
-//     public BucketCmd(BucketSubsystem bucketSubsystem,
-//             Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction) {
-//         this.bucketSubsystem = bucketSubsystem;
-//         this.xSpdFunction = xSpdFunction;
-//         this.ySpdFunction = ySpdFunction;
-//         this.turningSpdFunction = turningSpdFunction;
-//         this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-//         this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-//         this.turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
-//         addRequirements(bucketSubsystem);
-//     }
+    public BucketCmd(BucketSubsystem bucketSubsystem,
+            Supplier<Boolean> leftBumper, Supplier<Boolean> rightBumper) {
+        this.bucketSubsystem = bucketSubsystem;
+        this.leftBumper = leftBumper;
+        this.rightBumper = rightBumper;
+        addRequirements(bucketSubsystem);
+    }
 
-//     @Override
-//     public void initialize() {
-//     }
+    @Override
+    public void initialize() {
+    }
 
-//     @Override
-//     public void execute() {
-//         // 1. Get real-time joystick inputs
-//         double xSpeed = xSpdFunction.get();
-//         double ySpeed = ySpdFunction.get();
-//         double turningSpeed = turningSpdFunction.get();
+    @Override
+    public void execute() {
+        if (leftBumper.get()) {
+            if (bucketSubsystem.bucketState != BucketSubsystem.BucketState.LOWERED) {
+                bucketSubsystem.bucketState = BucketSubsystem.BucketState.LOWERING;
+            }
+        }
+        else if (rightBumper.get()) {
+            if (bucketSubsystem.bucketState != BucketSubsystem.BucketState.RAISED) {
+                bucketSubsystem.bucketState = BucketSubsystem.BucketState.RAISING;
+            }
+        }
 
-//         // 2. Apply deadband
-//         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
-//         ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
-//         turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
+        double currentAngle = bucketSubsystem.getPositionDeg();
+        switch (bucketSubsystem.bucketState) {
+            case RAISING:
+                if (currentAngle >= ModuleConstants.kBucketEngagedAngle-5)
+                    bucketSubsystem.bucketState = BucketSubsystem.BucketState.RAISED;
+            case RAISED:
+                bucketSubsystem.setMotorAngle(ModuleConstants.kBucketEngagedAngle);
+                break;
+            case LOWERING:
+                if (currentAngle <= 5) {
+                    bucketSubsystem.bucketState = BucketSubsystem.BucketState.LOWERED;
+                    break;
+                }
+                bucketSubsystem.setMotorAngle(currentAngle-20);
+                break;
+            case LOWERED:
+                bucketSubsystem.stop();
+                break;
+        }
+    }
 
-//         // 3. Make the driving smoother
-//         xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-//         ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-//         turningSpeed = turningLimiter.calculate(turningSpeed)
-//                 * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+    @Override
+    public void end(boolean interrupted) {
+        bucketSubsystem.stop();
+    }
 
-//         // 4. Construct desired chassis speeds
-//         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
-
-//         // 5. Convert chassis speeds to individual module states
-//         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-
-//         // 6. Output each module states to wheels
-//         bucketSubsystem.setModuleStates(moduleStates);
-//     }
-
-//     @Override
-//     public void end(boolean interrupted) {
-//         bucketSubsystem.stopModules();
-//     }
-
-//     @Override
-//     public boolean isFinished() {
-//         return false;
-//     }
-// }
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+}
