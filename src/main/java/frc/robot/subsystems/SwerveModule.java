@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -10,6 +13,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 //import edu.wpi.first.wpilibj.AnalogInput;
 //import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -30,6 +34,13 @@ public class SwerveModule {
 
     private final PIDController turningPidController;
     //private final PIDController drivePidController;
+
+    private final SimpleMotorFeedforward driveFF =
+            new SimpleMotorFeedforward(
+                    ModuleConstants.kSDrive,
+                    ModuleConstants.kVDrive,
+                    ModuleConstants.kADrive
+            );
 
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed) {
 
@@ -60,6 +71,10 @@ public class SwerveModule {
         //drivePidController.enableContinuousInput(-Math.PI, Math.PI);
 
         resetEncoders();
+    }
+
+    private double metersPerSecondToRPM(double mps) {
+        return mps / ModuleConstants.kWheelCircumferenceMeters * 60.0;
     }
 
     public double getDrivePosition() {
@@ -98,9 +113,22 @@ public class SwerveModule {
         }
         state.optimize(new Rotation2d(getTurningPosition()));
 
-        driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
-        //driveMotor.set(drivePidController.calculate(getDriveVelocity(), state.angle.getRadians()));
+        double desiredRPM = metersPerSecondToRPM(state.speedMetersPerSecond);
+        double ffVolts = driveFF.calculate(state.speedMetersPerSecond);
+
+        driveMotor.getClosedLoopController().setReference(
+            desiredRPM,
+            SparkBase.ControlType.kVelocity,
+            ClosedLoopSlot.kSlot0, // default PID slot
+            ffVolts,
+            SparkClosedLoopController.ArbFFUnits.kVoltage
+        );
+
+        double turningOutputVolts = turningPidController.calculate(
+            getTurningPosition(),
+            state.angle.getRadians()
+        );
+        turningMotor.set(turningOutputVolts / 12.0);
     }
 
     public void stop() {
