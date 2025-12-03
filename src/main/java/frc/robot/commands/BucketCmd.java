@@ -1,9 +1,6 @@
 package frc.robot.commands;
 
 import java.util.function.Supplier;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.subsystems.BucketSubsystem;
@@ -28,10 +25,34 @@ public class BucketCmd extends Command {
     @Override
     public void execute() {
         if (leftBumper.get()) {
-            bucketSubsystem.stop();
+            if (bucketSubsystem.bucketState != BucketSubsystem.BucketState.LOWERED) {
+                bucketSubsystem.bucketState = BucketSubsystem.BucketState.LOWERING;
+            }
         }
         else if (rightBumper.get()) {
-            bucketSubsystem.setMotorAngle(ModuleConstants.kBucketEngagedAngle);
+            if (bucketSubsystem.bucketState != BucketSubsystem.BucketState.RAISED) {
+                bucketSubsystem.bucketState = BucketSubsystem.BucketState.RAISING;
+            }
+        }
+
+        double currentAngle = bucketSubsystem.getPositionDeg();
+        switch (bucketSubsystem.bucketState) {
+            case RAISING:
+                if (currentAngle >= ModuleConstants.kBucketEngagedAngle-5)
+                    bucketSubsystem.bucketState = BucketSubsystem.BucketState.RAISED;
+            case RAISED:
+                bucketSubsystem.setMotorAngle(ModuleConstants.kBucketEngagedAngle);
+                break;
+            case LOWERING:
+                if (currentAngle <= 5) {
+                    bucketSubsystem.bucketState = BucketSubsystem.BucketState.LOWERED;
+                    break;
+                }
+                bucketSubsystem.setMotorAngle(currentAngle-20);
+                break;
+            case LOWERED:
+                bucketSubsystem.stop();
+                break;
         }
     }
 

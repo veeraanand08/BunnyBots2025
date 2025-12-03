@@ -27,7 +27,7 @@ public final class Constants {
         public static final double kDLeftBucket = 0.0;
         public static final double kDRightBucket = 0.0;
 
-        public static final double kBucketEngagedAngle = 720.0; // degrees
+        public static final double kBucketEngagedAngle = 700.0; // degrees
     }
 
     public static final class DriveConstants {

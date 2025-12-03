@@ -24,7 +24,9 @@ public class BucketSubsystem extends SubsystemBase {
     private final RelativeEncoder rightEncoder;
 
     private final PIDController leftPIDController;
-    private final PIDController rightPIDController; 
+    private final PIDController rightPIDController;
+
+    public BucketState bucketState;
 
     public BucketSubsystem() {
         leftMotor = new SparkMax(DriveConstants.kLeftBucketMotor, MotorType.kBrushless);
@@ -47,6 +49,7 @@ public class BucketSubsystem extends SubsystemBase {
         rightPIDController = new PIDController(ModuleConstants.kPRightBucket, ModuleConstants.kIRightBucket, ModuleConstants.kDRightBucket);
 
         resetEncoders();
+        bucketState = BucketState.LOWERED;
     }
 
     public void setMotorAngle(double angle) {
@@ -54,6 +57,7 @@ public class BucketSubsystem extends SubsystemBase {
         rightMotor.set(rightPIDController.calculate(getRightPosition(), Math.toRadians(angle)));
     }
 
+    public double getPositionDeg() { return Math.toDegrees((getLeftPosition() + getRightPosition()) / 2); }
     public double getLeftPosition() { return leftEncoder.getPosition(); }
     public double getRightPosition() { return rightEncoder.getPosition(); }
 
@@ -65,5 +69,9 @@ public class BucketSubsystem extends SubsystemBase {
     public void stop() {
         leftMotor.set(0);
         rightMotor.set(0);
+    }
+
+    public enum BucketState {
+        RAISING, RAISED, LOWERING, LOWERED
     }
 }
