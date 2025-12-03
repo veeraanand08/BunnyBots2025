@@ -18,16 +18,20 @@ public class RobotContainer {
     public RobotContainer() {
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                 swerveSubsystem,
-                controller::getLeftX,
-                controller::getLeftY,
-                controller::getRightX
-        ));
-        
+                () -> -controller.getRawAxis(OIConstants.kDriverXAxis),
+                () -> controller.getRawAxis(OIConstants.kDriverYAxis),
+                () -> controller.getRawAxis(OIConstants.kDriverRotAxis)));
+                //swerveSubsystem,
+                //controller::getLeftX,
+                //controller::getLeftY,
+                //controller::getRightX
+                
         bucketSubsystem.setDefaultCommand(new BucketCmd(
                 bucketSubsystem,
                 controller::getLeftBumperButton,
                 controller::getRightBumperButton
         ));
     }
+
 }
 

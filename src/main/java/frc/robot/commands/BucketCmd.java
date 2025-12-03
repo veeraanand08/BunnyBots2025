@@ -23,38 +23,49 @@ public class BucketCmd extends Command {
     }
 
     @Override
+    @Override
     public void execute() {
         if (leftBumper.get()) {
             if (bucketSubsystem.bucketState != BucketSubsystem.BucketState.LOWERED) {
                 bucketSubsystem.bucketState = BucketSubsystem.BucketState.LOWERING;
             }
-        }
-        else if (rightBumper.get()) {
+        } else if (rightBumper.get()) {
             if (bucketSubsystem.bucketState != BucketSubsystem.BucketState.RAISED) {
                 bucketSubsystem.bucketState = BucketSubsystem.BucketState.RAISING;
             }
         }
-
+    
         double currentAngle = bucketSubsystem.getPositionDeg();
+    
         switch (bucketSubsystem.bucketState) {
             case RAISING:
-                if (currentAngle >= ModuleConstants.kBucketEngagedAngle-5)
+                if (currentAngle >= ModuleConstants.kBucketEngagedAngle - 5) { //deadband
                     bucketSubsystem.bucketState = BucketSubsystem.BucketState.RAISED;
+                    bucketSubsystem.setMotorAngle(ModuleConstants.kBucketEngagedAngle);
+                } else {
+                    bucketSubsystem.setMotorAngle(currentAngle + 40); // raise in steps
+                }
+                break;
+    
             case RAISED:
                 bucketSubsystem.setMotorAngle(ModuleConstants.kBucketEngagedAngle);
                 break;
+    
             case LOWERING:
-                if (currentAngle <= 5) {
+                if (currentAngle <= 5) { //deadband
                     bucketSubsystem.bucketState = BucketSubsystem.BucketState.LOWERED;
-                    break;
+                    bucketSubsystem.stop();
+                } else {
+                    bucketSubsystem.setMotorAngle(currentAngle - 40); // lower in steps
                 }
-                bucketSubsystem.setMotorAngle(currentAngle-20);
                 break;
+    
             case LOWERED:
                 bucketSubsystem.stop();
                 break;
         }
     }
+    
 
     @Override
     public void end(boolean interrupted) {
