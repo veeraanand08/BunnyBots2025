@@ -48,7 +48,7 @@ public class BucketCmd extends Command {
                     bucketSubsystem.bucketState = BucketSubsystem.BucketState.LOWERED;
                     break;
                 }
-                bucketSubsystem.setMotorAngle(currentAngle-20);
+                bucketSubsystem.setMotorSpeed(-0.075);
                 break;
             case LOWERED:
                 bucketSubsystem.stop();

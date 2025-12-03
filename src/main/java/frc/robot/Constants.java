@@ -20,14 +20,11 @@ public final class Constants {
 
         public static final double kBucketMotorGearRatio = 1 / 3.0;
         public static final double kBucketEncoderRot2Rad = 2 * Math.PI * kBucketMotorGearRatio;
-        public static final double kPLeftBucket = 0.04;
-        public static final double kPRightBucket = 0.04;
-        public static final double kILeftBucket = 0.0;
-        public static final double kIRightBucket = 0.0;
-        public static final double kDLeftBucket = 0.0;
-        public static final double kDRightBucket = 0.0;
+        public static final double kPBucket = 0.02;
+        public static final double kIBucket = 0.0;
+        public static final double kDBucket = 0.0;
 
-        public static final double kBucketEngagedAngle = 700.0; // degrees
+        public static final double kBucketEngagedAngle = 1160.0; // degrees
     }
 
     public static final class DriveConstants {

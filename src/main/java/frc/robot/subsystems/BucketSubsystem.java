@@ -45,8 +45,8 @@ public class BucketSubsystem extends SubsystemBase {
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
 
-        leftPIDController = new PIDController(ModuleConstants.kPLeftBucket, ModuleConstants.kILeftBucket, ModuleConstants.kDLeftBucket);
-        rightPIDController = new PIDController(ModuleConstants.kPRightBucket, ModuleConstants.kIRightBucket, ModuleConstants.kDRightBucket);
+        leftPIDController = new PIDController(ModuleConstants.kPBucket, ModuleConstants.kIBucket, ModuleConstants.kDBucket);
+        rightPIDController = new PIDController(ModuleConstants.kPBucket, ModuleConstants.kIBucket, ModuleConstants.kDBucket);
 
         resetEncoders();
         bucketState = BucketState.LOWERED;
@@ -55,6 +55,11 @@ public class BucketSubsystem extends SubsystemBase {
     public void setMotorAngle(double angle) {
         leftMotor.set(leftPIDController.calculate(getLeftPosition(), Math.toRadians(angle)));
         rightMotor.set(rightPIDController.calculate(getRightPosition(), Math.toRadians(angle)));
+    }
+
+    public void setMotorSpeed(double speed) {
+        leftMotor.set(speed);
+        rightMotor.set(speed);
     }
 
     public double getPositionDeg() { return Math.toDegrees((getLeftPosition() + getRightPosition()) / 2); }
