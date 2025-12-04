@@ -17,6 +17,7 @@ public final class Constants {
         public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
         public static final double kPTurning = 0.5;
         public static final double kPDrive = 0.5;
+        
 
         public static final double kBucketMotorGearRatio = 1 / 3.0;
         public static final double kBucketEncoderRot2Rad = 2 * Math.PI * kBucketMotorGearRatio;
@@ -39,23 +40,24 @@ public final class Constants {
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
                 new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
 
+
+        public static final boolean kRightBucketMotorReversed = false;
+        public static final boolean kLeftBucketMotorReversed = false;
+
         public static final int kBackLeftTurningMotorPort = 2;
         public static final int kBackLeftDriveMotorPort = 4;
-
+        
         public static final int kFrontLeftTurningMotorPort = 7;
         public static final int kFrontLeftDriveMotorPort = 5;
-        
-        public static final int kFrontRightTurningMotorPort = 9;
-        public static final int kFrontRightDriveMotorPort = 11;
-        
+                
+        public static final int kFrontRightTurningMotorPort = 11;
+        public static final int kFrontRightDriveMotorPort = 9;
+                
         public static final int kBackRightTurningMotorPort = 13;
         public static final int kBackRightDriveMotorPort = 12;
-
+        
         public static final int kLeftBucketMotor = 6;
         public static final int kRightBucketMotor = 8;
-
-        public static final boolean kLeftBucketMotorReversed = false;
-        public static final boolean kRightBucketMotorReversed = true;
         
         public static final int kBackLeftDriveAbsoluteEncoderPort = 1;
         public static final int kFrontLeftDriveAbsoluteEncoderPort = 3;

@@ -1,29 +1,55 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import edu.wpi.first.math.controller.PIDController;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ModuleConstants;
+import frc.robot.LimelightHelpers;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.SwerveSubsystem;
 
 
 public class LimeLightSubsystem extends SubsystemBase {
 
+    private final SlewRateLimiter turnLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
+    
     public LimeLightSubsystem() {
         
     }
 
-    public void stop() {
+    public double limelight_Angle(){
+
+
+        double kP = -0.035;
+
+        double wantedAngle = 0;
+
+        System.out.println("IM GOING CRAZY: " + LimelightHelpers.getTX("limelight-left"));
         
+        double targetAngVelo = (wantedAngle- LimelightHelpers.getTX("limelight-left")) * kP;
+
+        targetAngVelo = turnLimiter.calculate(targetAngVelo)*DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+
+        return targetAngVelo;
+
     }
 
-    public enum BucketState {
-        RAISING, RAISED, LOWERING, LOWERED
+    public double limelight_Range(){
+        double kP = 0.1;
+
+        double wantedRange = 10;
+
+        System.out.println("IM GOING EVEN CRAZIER: " + LimelightHelpers.getTY("limelight-left"));
+
+        double targetRangeVelo = LimelightHelpers.getTY("limelight-left") * kP;
+
+        return 0.2;
+
+        //return targetRangeVelo;
+
+    }
+
+    public void stop() {
+        
     }
 }
