@@ -1,11 +1,13 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,7 +26,7 @@ public class SwerveModule {
 
     private final RelativeEncoder driveEncoder;
     private final RelativeEncoder turningEncoder;
-
+    private final AbsoluteEncoder turningAbsoluteEncoder;
     private final PIDController turningPidController;
 
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed) {
@@ -32,15 +34,14 @@ public class SwerveModule {
         driveMotor = new SparkMax(driveMotorId, MotorType.kBrushless);
         turningMotor = new SparkMax(turningMotorId, MotorType.kBrushless);
 
-
-        driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        turningMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-
         driveConfig = new SparkMaxConfig();
         turnConfig = new SparkMaxConfig();
 
         driveConfig.inverted(driveMotorReversed);
         turnConfig.inverted(turningMotorReversed);
+
+        driveConfig.idleMode(IdleMode.kBrake);
+        turnConfig.idleMode(IdleMode.kBrake);
 
         driveConfig.encoder.positionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter);
         driveConfig.encoder.velocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec);
@@ -52,6 +53,7 @@ public class SwerveModule {
 
         driveEncoder = driveMotor.getEncoder();
         turningEncoder = turningMotor.getEncoder();
+        turningAbsoluteEncoder = turningMotor.getAbsoluteEncoder();
 
         turningPidController = new PIDController(ModuleConstants.kPTurning, ModuleConstants.kITurning, ModuleConstants.kDTurning);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
@@ -76,8 +78,8 @@ public class SwerveModule {
     }
 
     public void resetEncoders() {
-        driveEncoder.setPosition(0);
-        turningEncoder.setPosition(0);
+        driveEncoder.setPosition(90);
+        turningEncoder.setPosition(turningAbsoluteEncoder.getPosition());
     }
 
     public SwerveModulePosition getPosition() {
