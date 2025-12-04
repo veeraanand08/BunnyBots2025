@@ -9,14 +9,15 @@ public final class Constants {
 
     public static final class ModuleConstants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
-        public static final double kDriveMotorGearRatio = 1 / 5.8462;
+        public static final double kDriveMotorGearRatio = 1 / 5.8426;
         public static final double kTurningMotorGearRatio = 1 / 18.0;
         public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
         public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
         public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
         public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
         public static final double kPTurning = 0.5;
-        public static final double kPDrive = 0.5;
+        public static final double kITurning = 0;
+        public static final double kDTurning = 0;
     }
 
     public static final class DriveConstants {
@@ -37,14 +38,14 @@ public final class Constants {
         public static final int kFrontLeftTurningMotorPort = 7;
         public static final int kFrontLeftDriveMotorPort = 5;
         
-        public static final int kFrontRightTurningMotorPort = 9;
-        public static final int kFrontRightDriveMotorPort = 8;
+        public static final int kFrontRightTurningMotorPort = 11;
+        public static final int kFrontRightDriveMotorPort = 9;
         
         public static final int kBackRightTurningMotorPort = 13;
         public static final int kBackRightDriveMotorPort = 12;
 
         private static final int kLeftBucketMotor = 6;
-        private static final int kRightBucketMotor = 11;
+        private static final int kRightBucketMotor = 8;
         
         public static final int kBackLeftDriveAbsoluteEncoderPort = 1;
         public static final int kFrontLeftDriveAbsoluteEncoderPort = 3;
@@ -58,8 +59,8 @@ public final class Constants {
 
         public static final boolean kFrontLeftDriveEncoderReversed = true;
         public static final boolean kBackLeftDriveEncoderReversed = true;
-        public static final boolean kFrontRightDriveEncoderReversed = false;
-        public static final boolean kBackRightDriveEncoderReversed = false;
+        public static final boolean kFrontRightDriveEncoderReversed = true;
+        public static final boolean kBackRightDriveEncoderReversed = true;
 
         public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
         public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
