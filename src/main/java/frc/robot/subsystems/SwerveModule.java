@@ -32,8 +32,9 @@ public class SwerveModule {
         driveMotor = new SparkMax(driveMotorId, MotorType.kBrushless);
         turningMotor = new SparkMax(turningMotorId, MotorType.kBrushless);
 
-        driveMotor.setStopping(Motor.Stop::k_brake);
-        turningMotor.setStopping(Motor.Stop::k_brake);
+
+        driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        turningMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
         driveConfig = new SparkMaxConfig();
         turnConfig = new SparkMaxConfig();
