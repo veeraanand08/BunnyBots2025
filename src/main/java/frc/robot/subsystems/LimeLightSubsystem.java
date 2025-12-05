@@ -5,9 +5,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.LimelightHelpers;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.SwerveSubsystem;
-
 
 public class LimeLightSubsystem extends SubsystemBase {
 
@@ -17,7 +14,7 @@ public class LimeLightSubsystem extends SubsystemBase {
         
     }
 
-    public double limelight_Angle(){
+    public double limelightAngle(){
 
 
         double kP = -0.035;
@@ -34,7 +31,7 @@ public class LimeLightSubsystem extends SubsystemBase {
 
     }
 
-    public double limelight_Range(){
+    public double limelightRange(){
         double kP = 0.1;
 
         double wantedRange = 10;
