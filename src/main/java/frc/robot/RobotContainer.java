@@ -25,10 +25,10 @@ public class RobotContainer {
     public RobotContainer() {
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                 swerveSubsystem,
-                controller::getLeftY,
-                controller::getLeftX, 
+                () -> -controller.getLeftY(),
+                () -> controller.getLeftX(), 
                 controller::getRightX,             
-                false
+                true
         ));
         
         bucketSubsystem.setDefaultCommand(new BucketCmd(
