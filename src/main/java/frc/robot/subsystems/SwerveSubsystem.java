@@ -53,7 +53,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveSubsystem() {
         new Thread(() -> {
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
                 zeroHeading();
             } catch (Exception e) {
             }
@@ -62,9 +62,16 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        modulePositions = new SwerveModulePosition[] {
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+        };
+
         odometer.update(getRotation2d(), modulePositions);
         SmartDashboard.putNumber("Robot Heading", gyro.getYaw());
-        SmartDashboard.putBoolean("Connected?", gyro.isConnected());
+        SmartDashboard.putBoolean("Gyro Connected?", gyro.isConnected());
         SmartDashboard.putNumber("Gyro Port", gyro.getPort());
         SmartDashboard.putNumber("Gyro Update Count", gyro.getUpdateCount());
         SmartDashboard.putNumber("Gyro Byte Count", gyro.getByteCount());

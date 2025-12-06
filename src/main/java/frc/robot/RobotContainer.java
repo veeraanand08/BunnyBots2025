@@ -24,19 +24,8 @@ public class RobotContainer {
                 swerveSubsystem,
                 controller::getLeftY,
                 controller::getLeftX, 
-                () -> 0.0,             
+                controller::getRightX,             
                 false));
-
-        configureButtonBindings();
-    }
-
-    private void configureButtonBindings() {
-         if (controller.getXButton()) { 
-            SwerveModule [] moduleStates = swerveSubsystem.getSwerveModules();
-            for (int i = moduleStates.length; i>0; i--) {
-                moduleStates[i].resetEncoders();
-            }
-        }
     }
 }
 
