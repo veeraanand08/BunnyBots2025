@@ -26,9 +26,9 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                 swerveSubsystem,
                 () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(), 
+                () -> controller.getLeftX(), 
                 controller::getRightX,             
-                false
+                true
         ));
         
         bucketSubsystem.setDefaultCommand(new BucketCmd(
