@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
+import com.ctre.phoenix6.hardware.CANcoder;
 
 public class SwerveModule {
 
@@ -26,7 +27,7 @@ public class SwerveModule {
 
     private final RelativeEncoder driveEncoder;
     private final RelativeEncoder turningEncoder;
-    private final AbsoluteEncoder turningAbsoluteEncoder;
+
     private final PIDController turningPidController;
 
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed) {
@@ -53,7 +54,6 @@ public class SwerveModule {
 
         driveEncoder = driveMotor.getEncoder();
         turningEncoder = turningMotor.getEncoder();
-        turningAbsoluteEncoder = turningMotor.getAbsoluteEncoder();
 
         turningPidController = new PIDController(ModuleConstants.kPTurning, ModuleConstants.kITurning, ModuleConstants.kDTurning);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
@@ -78,8 +78,8 @@ public class SwerveModule {
     }
 
     public void resetEncoders() {
-        driveEncoder.setPosition(90);
-        turningEncoder.setPosition(turningAbsoluteEncoder.getPosition());
+        driveEncoder.setPosition(0);
+        turningEncoder.setPosition(0);
     }
 
     public SwerveModulePosition getPosition() {
@@ -95,7 +95,7 @@ public class SwerveModule {
     }
 
     public void setTurningMotor(double speed) {
-        driveMotor.set(speed);
+        turningMotor.set(speed);
     }
 
     public void setDesiredState(SwerveModuleState state) {
@@ -104,7 +104,13 @@ public class SwerveModule {
             return;
         }
         state.optimize(getState().angle);
-        driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        double driveValue = state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond;
+        if (driveValue > 1) {
+            driveValue = 1.0;
+        } else if (driveValue < -1.0) {
+            driveValue = -1.0;
+        }
+        driveMotor.set(driveValue);
         turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
     }
 

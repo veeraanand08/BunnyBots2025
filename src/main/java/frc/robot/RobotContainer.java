@@ -1,6 +1,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.SwerveJoystickCmd;
@@ -10,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.SwerveModule;
 
 public class RobotContainer {
 
@@ -20,10 +22,21 @@ public class RobotContainer {
     public RobotContainer() {
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                 swerveSubsystem,
-                controller::getLeftX,
                 controller::getLeftY,
-                controller::getRightX,                
-                true));
+                controller::getLeftX, 
+                () -> 0.0,             
+                false));
+
+        configureButtonBindings();
+    }
+
+    private void configureButtonBindings() {
+         if (controller.getXButton()) { 
+            SwerveModule [] moduleStates = swerveSubsystem.getSwerveModules();
+            for (int i = moduleStates.length; i>0; i--) {
+                moduleStates[i].resetEncoders();
+            }
+        }
     }
 }
 

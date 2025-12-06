@@ -53,7 +53,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveSubsystem() {
         new Thread(() -> {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(5000);
                 zeroHeading();
             } catch (Exception e) {
             }
@@ -63,16 +63,17 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         odometer.update(getRotation2d(), modulePositions);
-        SmartDashboard.putNumber("Robot Heading", getHeading());
+        SmartDashboard.putNumber("Robot Heading", gyro.getYaw());
+        SmartDashboard.putBoolean("Connected?", gyro.isConnected());
+        SmartDashboard.putNumber("Gyro Port", gyro.getPort());
+        SmartDashboard.putNumber("Gyro Update Count", gyro.getUpdateCount());
+        SmartDashboard.putNumber("Gyro Byte Count", gyro.getByteCount());
+        SmartDashboard.putNumber("Gyro Last Update Time", gyro.getLastSensorTimestamp());
         SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
     }
 
     public void zeroHeading() {
        gyro.reset();
-    }
-
-    public double getHeading() {
-        return MathUtil.inputModulus(gyro.getAngle(), -Math.PI, Math.PI);
     }
 
     public Rotation2d getRotation2d() {
@@ -92,6 +93,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         odometer.resetPosition(getRotation2d(), modulePositions, pose);
+    }
+
+    public SwerveModule[] getSwerveModules() {
+        return new SwerveModule[] {
+            frontLeft, frontRight, backLeft, backRight
+        };
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
