@@ -13,10 +13,11 @@ import frc.robot.Constants.SwerveConstants;
 public class RobotContainer {
 
     private final DriveTrain swerveSubsystem = new DriveTrain(
-        new SwerveModule(SwerveConstants.kBackRightDriveMotorId, SwerveConstants.kBackRightTurnMotorId, SwerveConstants.kBackRightDriveMotorReversed, SwerveConstants.kBackRightTurnMotorReversed, "BR"),
-        new SwerveModule(SwerveConstants.kBackLeftDriveMotorId, SwerveConstants.kBackLeftTurnMotorId, SwerveConstants.kBackLeftDriveMotorReversed, SwerveConstants.kBackLeftTurnMotorReversed, "BL"),
+        new SwerveModule(SwerveConstants.kFrontLeftDriveMotorId, SwerveConstants.kFrontLeftTurnMotorId, SwerveConstants.kFrontLeftDriveMotorReversed, SwerveConstants.kFrontLeftTurnMotorReversed, "FL"),
         new SwerveModule(SwerveConstants.kFrontRightDriveMotorId, SwerveConstants.kFrontRightTurnMotorId, SwerveConstants.kFrontRightDriveMotorReversed, SwerveConstants.kFrontRightTurnMotorReversed, "FR"),
-        new SwerveModule(SwerveConstants.kFrontLeftDriveMotorId, SwerveConstants.kFrontLeftTurnMotorId, SwerveConstants.kFrontLeftDriveMotorReversed, SwerveConstants.kFrontLeftTurnMotorReversed, "FL")
+        new SwerveModule(SwerveConstants.kBackLeftDriveMotorId, SwerveConstants.kBackLeftTurnMotorId, SwerveConstants.kBackLeftDriveMotorReversed, SwerveConstants.kBackLeftTurnMotorReversed, "BL"),
+        new SwerveModule(SwerveConstants.kBackRightDriveMotorId, SwerveConstants.kBackRightTurnMotorId, SwerveConstants.kBackRightDriveMotorReversed, SwerveConstants.kBackRightTurnMotorReversed, "BR")
+        
     );
     private final CommandXboxController  controller = new CommandXboxController(IOConstants.kDriverControllerPort);
 
@@ -25,9 +26,9 @@ public class RobotContainer {
 
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                 swerveSubsystem,
-                controller::getLeftX,
-                controller::getLeftY,
-                controller::getRightX
+                () -> -controller.getLeftY(),
+                () -> -controller.getLeftX(),
+                () -> -controller.getRightX()
         ));
     
     }

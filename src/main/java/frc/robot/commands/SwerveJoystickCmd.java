@@ -33,7 +33,6 @@ public class SwerveJoystickCmd extends Command {
 
     @Override
     public void execute() {
-        driveTrain.logError();
 
         double xSpeed = xSpdFunction.get();
         double ySpeed = ySpdFunction.get();
@@ -49,7 +48,7 @@ public class SwerveJoystickCmd extends Command {
         ySpeed = yLimiter.calculate(ySpeed);
         turningSpeed = turningLimiter.calculate(turningSpeed);
 
-        driveTrain.drive(xSpeed, ySpeed, turningSpeed);
+        driveTrain.drive(xSpeed, ySpeed, turningSpeed, true);
     }
 
     @Override
